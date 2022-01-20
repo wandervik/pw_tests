@@ -200,22 +200,19 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - uses: vemel/update-changelog@0.0.1
-        id: changelog
+      # - uses: vemel/update-changelog@0.0.1
+      #   id: changelog
+      #   with:
+      #     version: ${{ env.new_version }}
+
+      - name: Get Time
+        id: time
+        uses: nanzm/get-time-action@v1.1
         with:
-          version: ${{ env.new_version }}
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
-        with:
-          commit-message: Release ${{ env.new_version }}
-          labels: release, bot
-          title: "Release ${{ env.new_version }}"
-          body: |
-            # Release ${{ env.new_version }}
-
-            Merge this PR to update your version and changelog!
-
-            ## Included Pull Requests
-
-            ${{ steps.changelog.outputs.pulls_list_md }}
+          timeZone: 2
+          format: 'YYYY-MM-DD-HH-mm-ss'
+      - name: Usage
+        env:
+          TIME: "${{ steps.time.outputs.time }}"
+        run: |
+          echo "${{ env.TIME }} : Version ${{ env.new_version }} was deployed on dev"
