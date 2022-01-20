@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
      AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
-     LAMBDA_FUNCTION: version
+     LAMBDA_FUNCTION: test
 
     environment: dev
 
