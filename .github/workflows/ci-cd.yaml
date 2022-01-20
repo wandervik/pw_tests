@@ -18,8 +18,7 @@ env:
 
 jobs:
   build-deploy-dev:
-    if: |
-      ${{ github.ref == 'refs/heads/release' }}
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
      AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
@@ -116,8 +115,7 @@ jobs:
 # >>>>>>>>>>>>>>>>>>>>>> PROD <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   build-deploy-prod:
-    if: |
-      ${{ github.ref == 'refs/heads/master' }}
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
       AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
