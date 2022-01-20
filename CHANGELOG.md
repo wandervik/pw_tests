@@ -6,3 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version 1.16.5
 [ 2022-01-20-22-29-33 ] : deployed on dev <br />
 Last commit message: 
+## Version 1.16.7
+[ 2022-01-20-22-44-07 ] : deployed on dev <br />
+Last commit message: 
