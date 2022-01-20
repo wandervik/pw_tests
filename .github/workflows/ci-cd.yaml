@@ -30,6 +30,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: echo ${{github.ref}}
 
       - name: Get version
         id: version
@@ -127,6 +128,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: echo ${{github.ref}}
 
       - name: Get version
         id: prev_version
