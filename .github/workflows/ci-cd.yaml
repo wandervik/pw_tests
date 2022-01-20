@@ -1,12 +1,12 @@
 name: S3 Continuous Deployment to dev
 
-# on:
-#   pull_request:
-#     types: [closed]
-#     branches: [ 'release', 'master' ]
 on:
   pull_request:
+    types: [closed]
     branches: [ 'release', 'master' ]
+# on:
+#   push:
+#     branches: [ 'release', 'master' ]
 
 env:
   AWS_REGION: "eu-central-1"
