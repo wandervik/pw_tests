@@ -200,3 +200,16 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - id: changelog
+        uses: gandarez/changelog-action@v{latest}
+        with:
+          current_tag: ${{ env.new_version }}
+          previous_tag: ${{ env.prev_version }}
+          main_branch_name: "trunk"
+          exclude: |
+              ^Merge pull request .*
+              Fix .*
+          debug: true
+      - name: "Print changelog"
+        run: echo "${{ steps.changelog.outputs.changelog }}"
+
