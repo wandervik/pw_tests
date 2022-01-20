@@ -209,6 +209,16 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Checkout changelog branch
+        uses: actions/checkout@v2
+        with:
+          ref: changelog
+
+      - name: Pull
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git pull
+
 
       - name: Get current timestamp
         id: time
