@@ -231,3 +231,4 @@ jobs:
           git checkout changelog
           git commit CHANGELOG.md -m 'automated commit'
           git push
+
