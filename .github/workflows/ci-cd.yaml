@@ -2,6 +2,7 @@ name: S3 Continuous Deployment to dev
 
 on:
   pull_request:
+    types: [closed]
     branches: [ 'release', 'master' ]
 # on:
 #   push:
@@ -17,7 +18,9 @@ env:
 
 jobs:
   build-deploy-dev:
-    # if: ${{ github.ref == 'refs/heads/release' }}
+    if: |
+      github.event.pull_request.merged == true
+      ${{ github.ref == 'refs/heads/release' }}
     runs-on: ubuntu-latest
     env:
      AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
@@ -113,7 +116,9 @@ jobs:
 # >>>>>>>>>>>>>>>>>>>>>> PROD <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   build-deploy-prod:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: |
+      ${{ github.ref == 'refs/heads/master' }}
+      github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
       AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
