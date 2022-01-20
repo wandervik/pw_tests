@@ -1,11 +1,12 @@
 name: S3 Continuous Deployment to dev
 
-on:
-  pull_request:
-    branches: [ 'release', 'master' ]
 # on:
-#   push:
-#     branches: [ master ]
+#   pull_request:
+#     types: [closed]
+#     branches: [ 'release', 'master' ]
+on:
+  push:
+    branches: [ 'release', 'master' ]
 
 env:
   AWS_REGION: "eu-central-1"
@@ -17,7 +18,7 @@ env:
 
 jobs:
   build-deploy-dev:
-    # if: ${{ github.ref == 'refs/heads/release' }}
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
      AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
@@ -28,6 +29,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: echo ${{github.ref}}
 
       - name: Get version
         id: version
@@ -113,7 +115,7 @@ jobs:
 # >>>>>>>>>>>>>>>>>>>>>> PROD <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   build-deploy-prod:
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     env:
       AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
@@ -124,6 +126,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: echo ${{github.ref}}
 
       - name: Get version
         id: prev_version
