@@ -1,12 +1,12 @@
 name: S3 Continuous Deployment to dev
 
-on:
-  pull_request:
-    types: [closed]
-    branches: [ 'release', 'master' ]
 # on:
-#   push:
+#   pull_request:
+#     types: [closed]
 #     branches: [ 'release', 'master' ]
+on:
+  push:
+    branches: [ 'release', 'master' ]
 
 env:
   AWS_REGION: "eu-central-1"
@@ -216,9 +216,9 @@ jobs:
           echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
           echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
 
-      - name: Commit file
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git commit -m 'automated commit'
-          git push
+      # - name: Commit file
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     git commit -m 'automated commit'
+      #     git push
