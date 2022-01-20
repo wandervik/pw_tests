@@ -200,10 +200,6 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - uses: vemel/update-changelog@0.0.1
-      #   id: changelog
-      #   with:
-      #     version: ${{ env.new_version }}
 
       - name: Get Time
         id: time
@@ -215,4 +211,4 @@ jobs:
         env:
           TIME: "${{ steps.time.outputs.time }}"
         run: |
-          echo "${{ env.TIME }} : Version ${{ env.new_version }} was deployed on dev"
+          echo "${{ env.TIME }} : Version ${{ env.new_version }} was deployed on dev. and: ${{ github.event.head_commit.message }} "
