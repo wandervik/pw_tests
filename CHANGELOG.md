@@ -9,3 +9,6 @@ Last commit message:
 ## Version 1.16.7
 [ 2022-01-20-22-44-07 ] : deployed on dev <br />
 Last commit message: 
+## Version 1.16.9
+[ 2022-01-20-22-56-33 ] : deployed on dev <br />
+Last commit message: git pull
