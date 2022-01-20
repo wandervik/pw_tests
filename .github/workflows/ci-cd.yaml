@@ -224,11 +224,17 @@ jobs:
           echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
           echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
 
-      - name: Commit file
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git checkout changelog
-          git commit CHANGELOG.md -m 'automated commit'
-          git push
+      # - name: Commit file
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     git commit CHANGELOG.md -m 'automated commit'
+      #     git push
 
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        # env:
+          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+         commit_message: Automated Change
+         branch: changelog
+         file_pattern: CHANGELOG.md
