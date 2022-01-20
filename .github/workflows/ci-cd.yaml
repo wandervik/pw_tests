@@ -200,17 +200,22 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: change log
+      - uses: vemel/update-changelog@0.0.1
         id: changelog
-        uses: gandarez/changelog-action@v{latest}
         with:
-          current_tag: ${{ env.new_version }}
-          previous_tag: ${{ env.prev_version }}
-          main_branch_name: "master"
-          exclude: |
-              ^Merge pull request .*
-              Fix .*
-          debug: true
-      - name: "Print changelog"
-        run: echo "${{ steps.changelog.outputs.changelog }}"
+          version: ${{ env.new_version }}
 
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          commit-message: Release ${{ env.new_version }}
+          labels: release, bot
+          title: "Release ${{ env.new_version }}"
+          body: |
+            # Release ${{ env.new_version }}
+
+            Merge this PR to update your version and changelog!
+
+            ## Included Pull Requests
+
+            ${{ steps.changelog.outputs.pulls_list_md }}
