@@ -5,7 +5,7 @@ name: S3 Continuous Deployment to dev
 #     types: [closed]
 #     branches: [ 'release', 'master' ]
 on:
-  push:
+  pull_request:
     branches: [ 'release', 'master' ]
 
 env:
@@ -201,14 +201,24 @@ jobs:
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
-      - name: Get Time
+      - name: Get current timestamp
         id: time
         uses: nanzm/get-time-action@v1.1
         with:
           timeZone: 2
           format: 'YYYY-MM-DD-HH-mm-ss'
+
       - name: Usage
         env:
           TIME: "${{ steps.time.outputs.time }}"
         run: |
-          echo "${{ env.TIME }} : Version ${{ env.new_version }} was deployed on dev. and: ${{ github.event.head_commit.message }} "
+          echo "## Version ${{ env.new_version }}" >> CHANGELOG.md
+          echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
+          echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
+
+      - name: Commit file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git commit -m 'automated commit'
+          git push
