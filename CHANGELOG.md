@@ -25,3 +25,8 @@ Release
 Last commit message: Merge pull request #18 from wandervik/feauture5
 
 test changelog for prod
+## Version 2.0.0
+[ 2022-01-24-14-17-15 ] : deployed on prod <br />
+Last commit message: Merge pull request #20 from wandervik/feauture5
+
+Feauture5
