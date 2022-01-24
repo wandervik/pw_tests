@@ -33,3 +33,8 @@ Feauture5
 ## Version 2.0.0
 [ 2022-01-24-14-25-08 ] : deployed on prod <br />
 Last commit message: Merge branch 'master' of github.com:wandervik/pw_tests
+## Version 3.0.0
+[ 2022-01-24-14-30-31 ] : deployed on prod <br />
+Last commit message: Merge pull request #22 from wandervik/new2
+
+New2
