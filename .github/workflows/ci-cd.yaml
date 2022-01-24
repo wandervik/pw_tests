@@ -233,17 +233,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Check old version repositiry existing
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
+      # - name: Check old version repositiry existing
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
 
-      - name: Prevent overriding old version
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then exit 1; else echo "New version doesn't exist"; fi
+      # - name: Prevent overriding old version
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then exit 1; else echo "New version doesn't exist"; fi
 
-      - name: Check if prod version was tested on dev
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }}| head) ]]; then echo "The version was tested on dev"; else exit 1; fi
+      # - name: Check if prod version was tested on dev
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }}| head) ]]; then echo "The version was tested on dev"; else exit 1; fi
 
       # - name: NPM build
       #   run: |
