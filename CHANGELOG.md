@@ -20,3 +20,8 @@ Last commit message: test
 Last commit message: Merge pull request #17 from wandervik/release
 
 Release
+## Version 1.16.11
+[ 2022-01-24-13-57-32 ] : deployed on prod <br />
+Last commit message: Merge pull request #18 from wandervik/feauture5
+
+test changelog for prod
