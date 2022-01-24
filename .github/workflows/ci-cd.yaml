@@ -1,4 +1,4 @@
-name: S3 Continuous Deployment to dev
+name: S3 Continuous Deployment
 
 # on:
 #   pull_request:
@@ -198,7 +198,7 @@ jobs:
 
       - name: Push to bucket
         run: |
-          aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }} --acl public-read
+          aws s3 sync dist ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}
 
       # - name: Invalidate CDN
       #   uses: chetan/invalidate-cloudfront-action@v2
@@ -214,7 +214,7 @@ jobs:
         with:
           ref: changelog
 
-      - name: Pull
+      - name: Pull repositiry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git pull
@@ -227,7 +227,7 @@ jobs:
           timeZone: 2
           format: 'YYYY-MM-DD-HH-mm-ss'
 
-      - name: Usage
+      - name: Write changelog
         env:
           TIME: "${{ steps.time.outputs.time }}"
         run: |
