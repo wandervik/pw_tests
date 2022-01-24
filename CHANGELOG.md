@@ -51,3 +51,6 @@ Ci cd bump
 ## Version 2.3.0
 [ 2022-01-24-16-59-41 ] : deployed on prod <br />
 Last commit message: add lambda workflow
+## Version 2.3.1
+[ 2022-01-24-17-10-14 ] : deployed on prod <br />
+Last commit message: lambda update
