@@ -65,7 +65,6 @@ jobs:
           minor-wording:  'add,Adds,new,feat,minor'
           major-wording:  'MAJOR,cut-major'
           patch-wording:  'patch,fixes'
-          rc-wording:     'RELEASE,alpha'
           skip-commit:  'true'
           skip-tag: 'true'
 
