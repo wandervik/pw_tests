@@ -30,3 +30,6 @@ test changelog for prod
 Last commit message: Merge pull request #20 from wandervik/feauture5
 
 Feauture5
+## Version 2.0.0
+[ 2022-01-24-14-25-08 ] : deployed on prod <br />
+Last commit message: Merge branch 'master' of github.com:wandervik/pw_tests
