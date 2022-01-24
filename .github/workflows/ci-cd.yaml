@@ -176,23 +176,54 @@ jobs:
             prop_path: 'version'
       - run: echo "prev_version=${{steps.prev_version.outputs.prop}}" >> $GITHUB_ENV
 
+
+      #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>....
+
+      - run: mkdir temp
+      - name: Create temporary version file
+        id: create-json
+        uses: jsdaniell/create-json@1.1.2
+        with:
+          name: "temp/package.json"
+          json: '{"version":"${{ env.prev_version }}"}'
+
       - name:  'Automated Version Bump'
         uses:  'phips28/gh-action-bump-version@master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGEJSON_DIR:  'temp'
         with:
           minor-wording:  'add,Adds,new,feat,minor'
           major-wording:  'MAJOR,cut-major'
           patch-wording:  'patch,fixes'
-          commit-message: 'Bumped version number. Current version: {{version}}'
+          skip-commit:  'true'
+          skip-tag: 'true'
 
       - name: Get new version
         id: new_version
         uses: notiz-dev/github-action-json-property@release
         with:
-            path: 'package.json'
+            path: 'temp/package.json'
             prop_path: 'version'
       - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+
+      # - name:  'Automated Version Bump'
+      #   uses:  'phips28/gh-action-bump-version@master'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     minor-wording:  'add,Adds,new,feat,minor'
+      #     major-wording:  'MAJOR,cut-major'
+      #     patch-wording:  'patch,fixes'
+      #     commit-message: 'Bumped version number. Current version: {{version}}'
+
+      # - name: Get new version
+      #   id: new_version
+      #   uses: notiz-dev/github-action-json-property@release
+      #   with:
+      #       path: 'package.json'
+      #       prop_path: 'version'
+      # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
 
 
       - name: Configure AWS credentials
@@ -202,17 +233,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Check old version repositiry existing
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
+      # - name: Check old version repositiry existing
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
 
-      - name: Prevent overriding old version
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then exit 1; else echo "New version doesn't exist"; fi
+      # - name: Prevent overriding old version
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then exit 1; else echo "New version doesn't exist"; fi
 
-      - name: Check if prod version was tested on dev
-        run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }}| head) ]]; then echo "The version was tested on dev"; else exit 1; fi
+      # - name: Check if prod version was tested on dev
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }}| head) ]]; then echo "The version was tested on dev"; else exit 1; fi
 
       # - name: NPM build
       #   run: |
@@ -230,6 +261,17 @@ jobs:
         run: |
           aws s3 sync dist ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}
 
+
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          minor-wording:  'add,Adds,new,feat,minor'
+          major-wording:  'MAJOR,cut-major'
+          patch-wording:  'patch,fixes'
+          commit-message: 'Bumped version number. Current version: {{version}}'
+
       # - name: Invalidate CDN
       #   uses: chetan/invalidate-cloudfront-action@v2
       #   env:
@@ -238,6 +280,9 @@ jobs:
       #     AWS_REGION: ${{ env.AWS_REGION }}
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+
+
 
       - name: Checkout changelog branch
         uses: actions/checkout@v2
