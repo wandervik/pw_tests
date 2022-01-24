@@ -48,3 +48,6 @@ minor update
 Last commit message: Merge pull request #26 from wandervik/ci-cd-bump
 
 Ci cd bump
+## Version 2.3.0
+[ 2022-01-24-16-59-41 ] : deployed on prod <br />
+Last commit message: add lambda workflow
