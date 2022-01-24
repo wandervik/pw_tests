@@ -54,3 +54,6 @@ Last commit message: add lambda workflow
 ## Version 2.3.1
 [ 2022-01-24-17-10-14 ] : deployed on prod <br />
 Last commit message: lambda update
+## Version 2.3.2
+[ 2022-01-24-17-14-29 ] : deployed on prod <br />
+Last commit message: lambda deploy update
