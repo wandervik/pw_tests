@@ -15,3 +15,8 @@ Last commit message: git pull
 ## Version 1.16.10
 [ 2022-01-24-12-21-36 ] : deployed on dev <br />
 Last commit message: test
+## Version 1.17.0
+[ 2022-01-24-12-34-35 ] : deployed on dev <br />
+Last commit message: Merge pull request #17 from wandervik/release
+
+Release
