@@ -43,3 +43,8 @@ New2
 Last commit message: Merge pull request #24 from wandervik/new2
 
 minor update
+## Version 2.2.1
+[ 2022-01-24-15-02-19 ] : deployed on prod <br />
+Last commit message: Merge pull request #26 from wandervik/ci-cd-bump
+
+Ci cd bump
