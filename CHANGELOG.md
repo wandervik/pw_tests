@@ -38,3 +38,8 @@ Last commit message: Merge branch 'master' of github.com:wandervik/pw_tests
 Last commit message: Merge pull request #22 from wandervik/new2
 
 New2
+## Version 2.1.0
+[ 2022-01-24-14-38-08 ] : deployed on prod <br />
+Last commit message: Merge pull request #24 from wandervik/new2
+
+minor update
