@@ -5,17 +5,17 @@ name: S3 Continuous Deployment
 #     types: [closed]
 #     branches: [ 'release', 'master' ]
 
-on:
-  push:
-    branches: [ 'release', 'master' ]
-
 # on:
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         type: environment
-#         description: Select the environment
-#         default: 'prod'
+#   push:
+#     branches: [ 'release', 'master' ]
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        default: 'prod'
 
 env:
   AWS_REGION: "eu-central-1"
@@ -61,7 +61,7 @@ jobs:
           minor-wording:  'add,Adds,new,feat,minor'
           major-wording:  'MAJOR,cut-major'
           patch-wording:  'patch,fixes'
-          # skip-commit:  'true'
+          skip-commit:  'true'
           skip-tag: 'true'
 
       - name: Get new version
