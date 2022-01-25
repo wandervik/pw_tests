@@ -93,6 +93,16 @@ jobs:
     #     # field: DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN
     #     field: LambdaFunctionAssociations.Items.LambdaFunctionARN
     #     value: "arn:aws:lambda:us-east-1:519140963702:function:version:8"
+    - name: Get new version
+      id: new_version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+          path: 'dist-cfg.json'
+          prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN'
+    - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+
+    # Debug msg versions:
+    - run: echo "new version is - ${{ env.new_version }}"
 
     - name: manifest Version
       uses: deef0000dragon1/json-edit-action/@v1
