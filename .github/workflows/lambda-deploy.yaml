@@ -107,14 +107,14 @@ jobs:
     - name: manifest Version
       uses: deef0000dragon1/json-edit-action/@v1
       env:
-        KEY: DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN
-        VALUE: arn:aws:lambda:us-east-1:519140963702:function:version:8
+        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+        VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
         FILE: dist-cfg.json
 
     - name: Debug
       run: |
         cat dist-cfg.json
 
-    # - name: Update distribution
-    #   run: |
-    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config dist-cfg.json
+    - name: Update distribution
+      run: |
+        aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config dist-cfg.json
