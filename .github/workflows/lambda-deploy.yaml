@@ -90,10 +90,15 @@ jobs:
       uses: jossef/action-set-json-field@v1
       with:
         file: dist-cfg.json
-        field: DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN
+        # field: DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN
+        field: LambdaFunctionAssociations.Items.LambdaFunctionARN
         value: "arn:aws:lambda:us-east-1:519140963702:function:version:8"
 
 
     - name: Debug
       run: |
         cat dist-cfg.json
+
+    # - name: Update distribution
+    #   run: |
+    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config dist-cfg.json
