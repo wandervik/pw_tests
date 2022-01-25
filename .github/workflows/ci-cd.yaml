@@ -58,9 +58,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR:  'temp'
         with:
-          minor-wording:  'add,Adds,new,feat,minor'
-          major-wording:  'MAJOR,cut-major'
-          patch-wording:  'patch,fixes'
+          minor-wording:  'MINOR_UPDATE'
+          major-wording:  'MAJOR_UPDATE'
+          patch-wording:  'PATCH_UPDATE'
           skip-commit:  'true'
           skip-tag: 'true'
 
@@ -180,9 +180,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PACKAGEJSON_DIR:  'temp'
         with:
-          minor-wording:  'add,Adds,new,feat,minor'
-          major-wording:  'MAJOR,cut-major'
-          patch-wording:  'patch,fixes'
+          minor-wording:  'MINOR_UPDATE'
+          major-wording:  'MAJOR_UPDATE'
+          patch-wording:  'PATCH_UPDATE'
           skip-commit:  'true'
           skip-tag: 'true'
 
