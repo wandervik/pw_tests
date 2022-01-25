@@ -5,17 +5,17 @@ name: S3 Continuous Deployment
 #     types: [closed]
 #     branches: [ 'release', 'master' ]
 
-on:
-  push:
-    branches: [ 'release', 'master' ]
-
 # on:
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         type: environment
-#         description: Select the environment
-#         default: 'prod'
+#   push:
+#     branches: [ 'release', 'master' ]
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        default: 'prod'
 
 env:
   AWS_REGION: "eu-central-1"
@@ -48,13 +48,9 @@ jobs:
             prop_path: 'version'
       - run: echo "prev_version=${{steps.version.outputs.prop}}" >> $GITHUB_ENV
 
-      - run: mkdir temp
-      - name: Create temporary version file
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "temp/package.json"
-          json: '{"version":"${{ env.prev_version }}"}'
+      - run: |
+          mkdir temp
+          cp package.json temp/package.json
 
       - name:  'Automated Version Bump'
         uses:  'phips28/gh-action-bump-version@master'
@@ -162,8 +158,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: echo ${{github.ref}}
-
       - name: Get version
         id: prev_version
         uses: notiz-dev/github-action-json-property@release
@@ -175,13 +169,9 @@ jobs:
 
       #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>....
 
-      - run: mkdir temp
-      - name: Create temporary version file
-        id: create-json
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "temp/package.json"
-          json: '{"version":"${{ env.prev_version }}"}'
+      - run: |
+          mkdir temp
+          cp package.json temp/package.json
 
       - name:  'Automated Version Bump'
         uses:  'phips28/gh-action-bump-version@master'
@@ -258,7 +248,7 @@ jobs:
           aws s3 sync dist ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}
 
 
-      - name:  'Automated Version Bump'
+      - name: Commit bumped version
         uses:  'phips28/gh-action-bump-version@master'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
