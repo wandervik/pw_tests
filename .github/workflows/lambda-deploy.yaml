@@ -9,11 +9,11 @@ on:
         default: 'dev'
 
 jobs:
-  deploy:
-    name: Deploy lambda
+  deploy-prod:
+    name: Deploy lambda to prod
 
     runs-on: ubuntu-latest
-    environment: dev
+    environment: prod
 
     steps:
     - name: Checkout repository
