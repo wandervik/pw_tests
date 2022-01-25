@@ -9,37 +9,37 @@ on:
         default: 'dev'
 
 jobs:
-  deploy-dev:
-    name: Deploy lambda to dev
+  # deploy-dev:
+  #   name: Deploy lambda to dev
 
-    runs-on: ubuntu-latest
-    environment: dev
+  #   runs-on: ubuntu-latest
+  #   environment: dev
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+  #   steps:
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v2
 
-    - name: Get version
-      id: version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-          path: 'package.json'
-          prop_path: 'version'
-    - run: echo "VERSION=${{steps.version.outputs.prop}}" >> $GITHUB_ENV
+  #   - name: Get version
+  #     id: version
+  #     uses: notiz-dev/github-action-json-property@release
+  #     with:
+  #         path: 'package.json'
+  #         prop_path: 'version'
+  #   - run: echo "VERSION=${{steps.version.outputs.prop}}" >> $GITHUB_ENV
 
-    - name: Put current version
-      run: |
-        python3 insert-version.py new_version ${{ env.VERSION }}
+  #   - name: Put current version
+  #     run: |
+  #       python3 insert-version.py new_version ${{ env.VERSION }}
 
 
-    - name: Deploy lambda
-      uses: appleboy/lambda-action@master
-      with:
-        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws_region: eu-central-1
-        function_name: version
-        source: lambda-var.js
+  #   - name: Deploy lambda
+  #     uses: appleboy/lambda-action@master
+  #     with:
+  #       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #       aws_region: eu-central-1
+  #       function_name: version
+  #       source: lambda-var.js
 
   deploy-prod:
     name: Deploy lambda to prod
