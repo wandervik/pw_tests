@@ -1,4 +1,4 @@
-name: Deploy lambda
+name: Access token
 
 on:
   workflow_dispatch:
@@ -24,9 +24,7 @@ jobs:
       run: touch ~/.netrc
 
     - name: Access token
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run: echo "machine github.com login ${{ env.ACCESS_TOKEN }}" >> ~/.netrc
+      run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
 
     - name: DEBUG
       run: cat ~/.netrc
