@@ -24,7 +24,7 @@ jobs:
       run: touch ~/.netrc
 
     - name: Access token
-      run: echo "machine github.com login ltarabarova password ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
+      run: echo "machine github.com login ltarabarova password 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" >> ~/.netrc
 
     - name: DEBUG OWBNER
       run: git ls-remote -h -t https://github.com/wandervik/test-token.git
