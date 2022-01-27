@@ -26,7 +26,13 @@ jobs:
     - name: Access token
       env:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run: echo "machine github.com login ${{ env.ACCESS_TOKEN }}" >> ~/.netrc
+      run: echo "machine github.com login ltarabarova password ${{ env.ACCESS_TOKEN }}" >> ~/.netrc
+
+    - name: DEBUG OWBNER
+      run: |
+        whoami
+        cd ..
+        ls -al
 
     - name: DEBUG
       run: cat ~/.netrc
