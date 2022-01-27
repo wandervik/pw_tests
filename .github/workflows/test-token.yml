@@ -24,15 +24,11 @@ jobs:
       run: touch ~/.netrc
 
     - name: Access token
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      run: echo "machine github.com login ltarabarova password ${{ env.ACCESS_TOKEN }}" >> ~/.netrc
+      run: echo "machine github.com login ltarabarova password ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
 
     - name: DEBUG OWBNER
-      run: |
-        whoami
-        cd ..
-        ls -al
+      run: git ls-remote -h -t https://github.com/wandervik/test-token.git
+
 
     - name: DEBUG
       run: cat ~/.netrc
