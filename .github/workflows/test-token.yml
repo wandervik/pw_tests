@@ -1,0 +1,32 @@
+name: Deploy lambda
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        default: "dev"
+
+jobs:
+  test:
+    name: Test token
+
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: touch file
+      run: touch ~/.netrc
+
+    - name: Access token
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      run: echo "machine github.com login ${{ env.ACCESS_TOKEN }}" >> ~/.netrc
+
+    - name: DEBUG
+      run: cat ~/.netrc
