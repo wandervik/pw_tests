@@ -20,12 +20,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
-        persist-credentials: true
+        persist-credentials: false
 
-    - name: test
-      run: |
-        ls -la
-        cat ~/.netrc
 
     - name: touch file
       run: touch ~/.netrc
@@ -38,5 +34,8 @@ jobs:
       run: git ls-remote -h -t https://github.com/wandervik/test-token.git
 
 
-    - name: DEBUG
-      run: cat ~/.netrc
+    - name: test
+      run: |
+        ls -la
+        cat ~/.netrc
+
