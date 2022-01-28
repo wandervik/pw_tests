@@ -22,6 +22,10 @@ jobs:
       with:
         persist-credentials: false
 
+    - run: |
+        ls -la
+        cat ~/.netrc
+
     - name: touch file
       run: touch ~/.netrc
 
