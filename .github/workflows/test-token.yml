@@ -19,6 +19,8 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@v2
+      with:
+        persist-credentials: false
 
     - name: touch file
       run: touch ~/.netrc
