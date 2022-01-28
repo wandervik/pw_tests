@@ -22,7 +22,8 @@ jobs:
       with:
         persist-credentials: false
 
-    - run: |
+    - name: test
+      run: |
         ls -la
         cat ~/.netrc
 
