@@ -81,43 +81,43 @@ jobs:
         aws-region: eu-central-1
 
 
-    - name: Update Cloudfront
-      run: |
-        aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
+    # - name: Update Cloudfront
+    #   run: |
+    #     aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
 
-
-    # - name: Update version
-    #   uses: jossef/action-set-json-field@v1
+    # - name: Get new version
+    #   id: new_version
+    #   uses: notiz-dev/github-action-json-property@release
     #   with:
-    #     file: dist-cfg.json
-    #     # field: DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.LambdaFunctionARN
-    #     field: LambdaFunctionAssociations.Items.LambdaFunctionARN
-    #     value: "arn:aws:lambda:us-east-1:519140963702:function:version:8"
-    - name: Get new version
-      id: new_version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-          path: 'dist-cfg.json'
-          prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+    #       path: 'dist-cfg.json'
+    #       prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+    # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
 
-    # Debug msg versions:
-    - run: echo "new version is - ${{ env.new_version }}"
+    # # Debug msg versions:
+    # - run: echo "new version is - ${{ env.new_version }}"
 
-    - name: manifest Version
-      uses: deef0000dragon1/json-edit-action/@v1
-      env:
-        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-        VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-        FILE: dist-cfg.json
+    # - name: manifest Version
+    #   uses: deef0000dragon1/json-edit-action/@v1
+    #   env:
+    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+    #     VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+    #     FILE: dist-cfg.json
 
-    - name: Debug
-      run: |
-        cat dist-cfg.json
+    # - name: Debug
+    #   run: |
+    #     cat dist-cfg.json
 
     - name: Update distribution
-      run: |
-        aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
+      uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@v1
+      with:
+        distribution_id: 'E3MY6RLJJ44XBK'
+        path_pattern: 'Default'
+        lambda_association_event_type: 'origin-request'
+        lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+        cloudfront_invalidation_required: false
+
+      # run: |
+      #   aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
 
 
       # - name: Invalidate CDN
@@ -128,3 +128,4 @@ jobs:
       #     AWS_REGION: ${{ env.AWS_REGION }}
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
