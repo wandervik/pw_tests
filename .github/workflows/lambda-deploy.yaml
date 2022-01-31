@@ -117,7 +117,7 @@ jobs:
 
     - name: Update distribution
       run: |
-        aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config dist-cfg.json
+        aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
 
 
       # - name: Invalidate CDN
