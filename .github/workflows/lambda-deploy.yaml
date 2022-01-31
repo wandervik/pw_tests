@@ -6,7 +6,7 @@ on:
       environment:
         type: environment
         description: Select the environment
-        default: 'dev'
+        default: 'prod'
 
 jobs:
   # deploy-dev:
