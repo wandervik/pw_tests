@@ -108,7 +108,7 @@ jobs:
     #     cat dist-cfg.json
 
     - name: Update distribution
-      uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@v1
+      uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action
       with:
         distribution_id: 'E3MY6RLJJ44XBK'
         path_pattern: 'Default'
