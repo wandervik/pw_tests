@@ -57,3 +57,6 @@ Last commit message: lambda update
 ## Version 2.3.2
 [ 2022-01-24-17-14-29 ] : deployed on prod <br />
 Last commit message: lambda deploy update
+## Version 2.0.1
+[ 2022-02-01-21-16-18 ] : deployed on prod <br />
+Last commit message: test
