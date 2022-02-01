@@ -116,10 +116,10 @@ jobs:
           VALUE: ${{ env.new_version }}
           FILE: package-lock.json
 
-      - name: Update version in package-lock file 2
+      - name: Update version in package-lock file packages
         uses: deef0000dragon1/json-edit-action/@v1
         env:
-          KEY: 'packages.version'
+          KEY: 'packages[""].version'
           VALUE: ${{ env.new_version }}
           FILE: package-lock.json
 
@@ -134,11 +134,11 @@ jobs:
          branch: release
          file_pattern: package-lock.json
 
-      # - uses: stefanzweifel/git-auto-commit-action@v4
-      #   with:
-      #    commit_message: Automated Change
-      #    branch: release
-      #    file_pattern: '.github/workflows/vars.json'
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+         commit_message: Automated Change
+         branch: release
+         file_pattern: '.github/workflows/vars.json'
 
       - name: Checkout changelog branch
         uses: actions/checkout@v2
