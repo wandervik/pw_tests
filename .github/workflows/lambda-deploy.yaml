@@ -9,42 +9,46 @@ on:
         default: 'prod'
 
 jobs:
-  # deploy-dev:
-  #   name: Deploy lambda to dev
+  deploy-dev:
+    if: github.ref == 'refs/heads/release'
+    name: Deploy lambda to dev
 
-  #   runs-on: ubuntu-latest
-  #   environment: dev
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #   - name: Checkout repository
-  #     uses: actions/checkout@v2
+    environment: dev
 
-  #   - name: Get version
-  #     id: version
-  #     uses: notiz-dev/github-action-json-property@release
-  #     with:
-  #         path: 'package.json'
-  #         prop_path: 'version'
-  #   - run: echo "VERSION=${{steps.version.outputs.prop}}" >> $GITHUB_ENV
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-  #   - name: Put current version
-  #     run: |
-  #       python3 insert-version.py new_version ${{ env.VERSION }}
+    - name: Get version
+      id: version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+          path: 'workflow-vars.json'
+          prop_path: 'dev_version'
+    - run: echo "VERSION=${{steps.version.outputs.prop}}" >> $GITHUB_ENV
+
+    - name: Put current version
+      run: |
+        python3 insert-version.py new_version ${{ env.VERSION }}
 
 
-  #   - name: Deploy lambda
-  #     uses: appleboy/lambda-action@master
-  #     with:
-  #       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #       aws_region: eu-central-1
-  #       function_name: version
-  #       source: lambda-var.js
+    - name: Deploy lambda
+      uses: appleboy/lambda-action@master
+      with:
+        aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_region: eu-central-1
+        function_name: version
+        source: lambda-var.js
 
   deploy-prod:
+    if: github.ref == 'refs/heads/master'
     name: Deploy lambda to prod
 
     runs-on: ubuntu-latest
+
     environment: prod
 
     steps:
@@ -107,14 +111,14 @@ jobs:
     #   run: |
     #     cat dist-cfg.json
 
-    - name: Update distribution
-      uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
-      with:
-        distribution_id: 'E3MY6RLJJ44XBK'
-        path_pattern: 'Default'
-        lambda_association_event_type: 'origin-request'
-        lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-        cloudfront_invalidation_required: false
+    # - name: Update distribution
+    #   uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
+    #   with:
+    #     distribution_id: 'E3MY6RLJJ44XBK'
+    #     path_pattern: 'Default'
+    #     lambda_association_event_type: 'origin-request'
+    #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+    #     cloudfront_invalidation_required: false
 
       # run: |
       #   aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
