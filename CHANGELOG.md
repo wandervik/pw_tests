@@ -69,3 +69,6 @@ Last commit message: test
 ## Version 2.3.3
 [ 2022-02-01-22-42-00 ] : deployed on prod <br />
 Last commit message: test
+## Version 2.3.3
+[ 2022-02-01-22-47-00 ] : deployed on prod <br />
+Last commit message: Merge branch 'master' of github.com:wandervik/pw_tests
