@@ -126,13 +126,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
          commit_message: Bump version
-         branch: release
-         file_pattern: package-lock.json
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-         commit_message: Bump version
-         branch: release
+         branch: master
          file_pattern: workflow-vars.json
 
 
