@@ -63,3 +63,6 @@ Last commit message: test
 ## Version 2.0.2
 [ 2022-02-01-21-24-15 ] : deployed on prod <br />
 Last commit message: test
+## Version 2.0.2
+[ 2022-02-01-21-49-05 ] : deployed on prod <br />
+Last commit message: test
