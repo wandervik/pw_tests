@@ -5,17 +5,17 @@ name: S3 Continuous Deployment
 #     types: [closed]
 #     branches: [ 'release', 'master' ]
 
-on:
-  push:
-    branches: [ 'release', 'master' ]
-
 # on:
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         type: environment
-#         description: Select the environment
-#         default: 'prod'
+#   push:
+#     branches: [ 'release', 'master' ]
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        default: 'prod'
 
 env:
   AWS_REGION: "eu-central-1"
@@ -27,7 +27,7 @@ env:
 
 jobs:
   build-deploy-dev:
-    if: github.ref == 'refs/heads/release'
+    # if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
      AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK
@@ -82,9 +82,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # - name: Check old version repositiry existing
-      #   run: |
-      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
+      - name: Check old version repositiry existing
+        run: |
+          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
+
 
       # - name: NPM build
       #   run: |
@@ -140,6 +141,7 @@ jobs:
          branch: release
          file_pattern: 'workflow-vars.json'
 
+
       - name: Checkout changelog branch
         uses: actions/checkout@v2
         with:
@@ -176,7 +178,7 @@ jobs:
 # >>>>>>>>>>>>>>>>>>>>>> PROD <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
   build-deploy-prod:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     env:
       AWS_CDN_DISTRIBUTION: E3MY6RLJJ44XBK

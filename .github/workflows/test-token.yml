@@ -1,0 +1,42 @@
+name: Access token
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        description: Select the environment
+        default: "dev"
+
+jobs:
+  test:
+    name: Test token
+
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+
+
+    - name: touch file
+      run: touch ~/.netrc
+
+    - name: Access token
+      run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
+      # run: echo "machine github.com login ltarabarova password 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" >> ~/.netrc
+
+    - name: DEBUG OWBNER
+      run: git ls-remote -h -t https://github.com/wandervik/test-token.git
+
+
+    - name: test
+      run: |
+        cd ~
+        ls -la
+        cat ~/.netrc
+
