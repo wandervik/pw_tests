@@ -132,7 +132,7 @@ jobs:
         uses: deef0000dragon1/json-edit-action/@v1
         env:
           KEY: 'dev_version'
-          VALUE: 'test_14.50'
+          VALUE: 'test_14.55'
           FILE: workflow-vars.json
 
       - name: Pull repositiry
