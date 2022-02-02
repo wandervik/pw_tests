@@ -132,7 +132,7 @@ jobs:
         uses: deef0000dragon1/json-edit-action/@v1
         env:
           KEY: 'dev_version'
-          VALUE: 'test_14.58'
+          VALUE: 'test_15.00'
           FILE: workflow-vars.json
 
       - name: Pull repositiry
@@ -140,23 +140,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git pull
 
-      # - uses: stefanzweifel/git-auto-commit-action@v4
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #    commit_message: Bump version test new
-      #    branch: master
-      #    file_pattern: workflow-vars.json
-
       - uses: actions/checkout@v2
-      - name: Commit files
+      - uses: stefanzweifel/git-auto-commit-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git commit workflow-vars.json -m "automated bump"
-          git push
+        with:
+         commit_message: Bump version test new
+         branch: master
+         file_pattern: workflow-vars.json
+
+
+      # - name: Commit files
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     git config user.name github-actions
+      #     git config user.email github-actions@github.com
+      #     git commit workflow-vars.json -m "automated bump"
+      #     git push
 
 
       # - name: Checkout changelog branch
