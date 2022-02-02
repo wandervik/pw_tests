@@ -116,23 +116,23 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: Update version in env file
-      #   uses: deef0000dragon1/json-edit-action/@v1
-      #   env:
-      #     KEY: 'dev_version'
-      #     VALUE: ${{ env.new_version }}
-      #     FILE: workflow-vars.json
+      - name: Update version in env file
+        uses: deef0000dragon1/json-edit-action/@v1
+        env:
+          KEY: 'dev_version'
+          VALUE: 'test'
+          FILE: workflow-vars.json
 
-      # - name: Pull repositiry
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: git pull
+      - name: Pull repositiry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git pull
 
-      # - uses: stefanzweifel/git-auto-commit-action@v4
-      #   with:
-      #    commit_message: Bump version
-      #    branch: master
-      #    file_pattern: workflow-vars.json
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+         commit_message: Bump version
+         branch: master
+         file_pattern: workflow-vars.json
 
 
       # - name: Checkout changelog branch
