@@ -132,7 +132,7 @@ jobs:
         uses: deef0000dragon1/json-edit-action/@v1
         env:
           KEY: 'dev_version'
-          VALUE: 'test_14.55'
+          VALUE: 'test_14.58'
           FILE: workflow-vars.json
 
       - name: Pull repositiry
@@ -148,6 +148,7 @@ jobs:
       #    branch: master
       #    file_pattern: workflow-vars.json
 
+      - uses: actions/checkout@v2
       - name: Commit files
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
