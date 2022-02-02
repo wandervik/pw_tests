@@ -35,10 +35,22 @@ jobs:
     environment: dev
 
     steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v2
+      #   with:
+      #     persist-credentials: false
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          persist-credentials: false
+          path: master
+
+      - name: Checkout private tools
+        uses: actions/checkout@v2
+        with:
+          repository: wandervik/test-token
+          token: ${{ secrets.ACCESS_TOKEN }} # `GH_PAT` is a secret that contains your PAT
+          path: main
 
       # - name: Get version
       #   id: version
@@ -97,15 +109,15 @@ jobs:
 # echo "old version is - ${{ env.prev_version }} and new version is - ${{ env.new_version }}"
 
 # >>>>>>>>>>>>>>>>>>>>>> DEPLOY <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-      - name: Access token
-        run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
+      # - name: Access token
+      #   run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
 
       - name: test repo access
         run: git clone https://github.com/wandervik/test-token.git
 
       # - name: Push to bucket
       #   run: |
-      #     aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }} --acl public-read
+      #     aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }} --acl public-read --delete
 
       # - name: Invalidate CDN
       #   uses: chetan/invalidate-cloudfront-action@v2
