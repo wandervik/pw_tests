@@ -127,7 +127,7 @@ jobs:
         uses: deef0000dragon1/json-edit-action/@v1
         env:
           KEY: 'dev_version'
-          VALUE: 'test_15.09'
+          VALUE: ${{ env.new_version }}
           FILE: workflow-vars.json
 
       - uses: stefanzweifel/git-auto-commit-action@v4
