@@ -35,22 +35,22 @@ jobs:
     environment: dev
 
     steps:
-      # - name: Checkout
-      #   uses: actions/checkout@v2
-      #   with:
-      #     persist-credentials: false
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          path: master
+          persist-credentials: false
 
-      - name: Checkout private tools
-        uses: actions/checkout@v2
-        with:
-          repository: wandervik/test-token
-          token: ${{ secrets.ACCESS_TOKEN }} # `GH_PAT` is a secret that contains your PAT
-          path: main
+      # - name: Checkout
+      #   uses: actions/checkout@v2
+      #   with:
+      #     path: master
+
+      # - name: Checkout private tools
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: wandervik/test-token
+      #     token: ${{ secrets.ACCESS_TOKEN }} # `GH_PAT` is a secret that contains your PAT
+      #     path: main
 
       # - name: Get version
       #   id: version
@@ -109,8 +109,8 @@ jobs:
 # echo "old version is - ${{ env.prev_version }} and new version is - ${{ env.new_version }}"
 
 # >>>>>>>>>>>>>>>>>>>>>> DEPLOY <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-      # - name: Access token
-      #   run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
+      - name: Access token
+        run: echo "machine github.com login ${{ secrets.ACCESS_TOKEN }}" >> ~/.netrc
 
       - name: test repo access
         run: git clone https://github.com/wandervik/test-token.git
@@ -132,7 +132,7 @@ jobs:
         uses: deef0000dragon1/json-edit-action/@v1
         env:
           KEY: 'dev_version'
-          VALUE: 'test_new'
+          VALUE: 'test_14.50'
           FILE: workflow-vars.json
 
       - name: Pull repositiry
@@ -140,13 +140,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: git pull
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-         commit_message: Bump version test new
-         branch: master
-         file_pattern: workflow-vars.json
+      # - uses: stefanzweifel/git-auto-commit-action@v4
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #    commit_message: Bump version test new
+      #    branch: master
+      #    file_pattern: workflow-vars.json
+
+
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit workflow-vars.json -m "automated bump"
+          git push
 
 
       # - name: Checkout changelog branch
