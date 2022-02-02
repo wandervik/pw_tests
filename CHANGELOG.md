@@ -78,3 +78,8 @@ Last commit message: test
 ## Version 2.3.3
 [ 2022-02-02-17-48-45 ] : deployed on prod <br />
 Last commit message: test
+## Version 2.3.3
+[ 2022-02-02-19-18-51 ] : deployed on prod <br />
+Last commit message: Merge pull request #32 from wandervik/test-ci
+
+test run of ci cd
