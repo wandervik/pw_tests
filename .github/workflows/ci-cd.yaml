@@ -128,12 +128,12 @@ jobs:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Update version in env file
-        uses: deef0000dragon1/json-edit-action/@v1
-        env:
-          KEY: 'dev_version'
-          VALUE: 'test_15.04'
-          FILE: workflow-vars.json
+      # - name: Update version in env file
+      #   uses: deef0000dragon1/json-edit-action/@v1
+      #   env:
+      #     KEY: 'dev_version'
+      #     VALUE: 'test_15.04'
+      #     FILE: workflow-vars.json
 
       # - name: Pull repositiry
       #   env:
@@ -141,6 +141,15 @@ jobs:
       #   run: git pull
 
       - uses: actions/checkout@v2
+
+
+      - name: Update version in env file
+        uses: deef0000dragon1/json-edit-action/@v1
+        env:
+          KEY: 'dev_version'
+          VALUE: 'test_15.09'
+          FILE: workflow-vars.json
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
