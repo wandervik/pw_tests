@@ -83,3 +83,8 @@ Last commit message: test
 Last commit message: Merge pull request #32 from wandervik/test-ci
 
 test run of ci cd
+## Version 2.4.0
+[ 2022-02-02-19-22-18 ] : deployed on prod <br />
+Last commit message: Merge pull request #33 from wandervik/test-ci MINOR_UPDATE
+
+test run of ci cd
