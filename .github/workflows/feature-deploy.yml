@@ -11,6 +11,8 @@ env:
 jobs:
   feauture-deploy:
     runs-on: ubuntu-latest
+    environment: dev
+
     steps:
 
       - name: Checkout
