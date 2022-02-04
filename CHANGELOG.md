@@ -96,3 +96,6 @@ test prod
 ## Feature master
 [ 2022-02-04-23-50-05 ] : deployed on dev <br />
 Last commit message: 
+## Feature castiel
+[ 2022-02-04-23-52-56 ] : deployed on dev <br />
+Last commit message: 
