@@ -1,0 +1,82 @@
+name: Feuture Deployment
+on:
+  workflow_dispatch
+
+env:
+  AWS_REGION: "eu-central-1"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_PATH_DEV: s3://playwire-mobile-test
+
+jobs:
+  feauture-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Get branch name
+        run: echo "FEATURE_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # - name: Check old version repositiry existing
+      #   run: |
+      #     if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.prev_version }}| head) ]]; then echo "Old version exists"; else exit 1; fi
+
+      # - name: Setup node
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 16.10.0
+
+      # - name: Install dependencies
+      #   run: |
+      #     touch ~/.netrc
+      #     echo "machine github.com login ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" > ~/.netrc
+      #     npm ci
+
+      # - run: npm run buildCDN:feature
+
+      - name: Push to bucket
+        run: |
+          aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.FEATURE_NAME}} --acl public-read --delete
+
+
+      - name: Checkout changelog branch
+        uses: actions/checkout@v2
+        with:
+          ref: changelog
+
+      - name: Pull repositiry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git pull
+
+      - name: Get current timestamp
+        id: time
+        uses: nanzm/get-time-action@v1.1
+        with:
+          timeZone: 2
+          format: 'YYYY-MM-DD-HH-mm-ss'
+
+      - name: Write changelog
+        env:
+          TIME: "${{ steps.time.outputs.time }}"
+        run: |
+          echo "## Feature ${{ env.FEATURE_NAME }}" >> CHANGELOG.md
+          echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
+          echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+         commit_message: Automated Change
+         branch: changelog
+         file_pattern: CHANGELOG.md
