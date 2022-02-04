@@ -93,3 +93,6 @@ test run of ci cd
 Last commit message: Merge pull request #35 from wandervik/test-ci
 
 test prod
+## Feature master
+[ 2022-02-04-23-50-05 ] : deployed on dev <br />
+Last commit message: 
