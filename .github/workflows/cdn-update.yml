@@ -36,7 +36,7 @@ jobs:
       run: |
         echo "LAMBDA_ARN=cat lambda-cfg.json | jq '.FunctionArn' | tr -d \"" >> $GITHUB_ENV
 
-    - run: "test value: {{ env.LAMBDA_ARN }}"
+    - run: "test value: ${{ env.LAMBDA_ARN }}"
     # - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
 
     # - name: Get Cloudfront distribution
