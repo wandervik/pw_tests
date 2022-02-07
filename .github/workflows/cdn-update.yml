@@ -18,11 +18,11 @@ jobs:
         aws-region: us-east-1
 
 
-    - name: TEST STEP
-      id: test-step
-      run: |
-        echo "TEST=something" >> $GITHUB_ENV
-    - run: echo "the value of test step is ${{ env.TEST }}"
+    # - name: TEST STEP
+    #   id: test-step
+    #   run: |
+    #     echo "TEST=something" >> $GITHUB_ENV
+    # - run: echo "the value of test step is ${{ env.TEST }}"
 
 
     - name: Get latest lambda configuration
@@ -34,12 +34,14 @@ jobs:
     - name: Get latest lambda arn
       id: lambda_arn
       run: |
-        cat lambda-cfg.json | jq '.FunctionArn' | tr -d \"
-    - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
+        echo "LAMBDA_ARN=cat lambda-cfg.json | jq '.FunctionArn' | tr -d \"" >> $GITHUB_ENV
 
-    - name: Get Cloudfront distribution
-      run: |
-        aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
+    - run: "test value: {{ env.LAMBDA_ARN }}"
+    # - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
+
+    # - name: Get Cloudfront distribution
+    #   run: |
+    #     aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
 
     # - name: Get new version
     #   id: new_version
@@ -72,28 +74,28 @@ jobs:
     #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
     #     cloudfront_invalidation_required: false
 
-    - name: Get etag
-      id: etag
-      run: |
-        cat dist-cfg.json | jq '.ETag' | tr -d \"
-    - run: echo "ETAG=${{steps.etag.outputs.prop}}" >> $GITHUB_ENV
+    # - name: Get etag
+    #   id: etag
+    #   run: |
+    #     cat dist-cfg.json | jq '.ETag' | tr -d \"
+    # - run: echo "ETAG=${{steps.etag.outputs.prop}}" >> $GITHUB_ENV
 
 
-    - name: Modify Config
-      run: |
-        cat dist-cfg.json | jq '.DistributionConfig' \
-        > dist-cfg_updated.json
+    # - name: Modify Config
+    #   run: |
+    #     cat dist-cfg.json | jq '.DistributionConfig' \
+    #     > dist-cfg_updated.json
 
-    - name: manifest Version
-      uses: deef0000dragon1/json-edit-action/@v1
-      env:
-        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-        VALUE: ${{ env.LAMBDA_ARN }}
-        FILE: dist-cfg_updated.json
+    # - name: manifest Version
+    #   uses: deef0000dragon1/json-edit-action/@v1
+    #   env:
+    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+    #     VALUE: ${{ env.LAMBDA_ARN }}
+    #     FILE: dist-cfg_updated.json
 
-    - name: Debug
-      run: |
-        cat dist-cfg_updated.json
+    # - name: Debug
+    #   run: |
+    #     cat dist-cfg_updated.json
 
     # - name: Debug 2
     #   run: |
