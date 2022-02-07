@@ -17,11 +17,17 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
-    - name: Get latest lambda version
+    - name: Get latest lambda configuration
       run: |
         aws lambda list-versions-by-function --function-name version \
         --no-paginate \
         --query "max_by(Versions, &to_number(to_number(Version) || '0'))" > lambda-cfg.json
+
+    - name: Get latest lambda arn
+      id: lambda_arn
+      run: |
+        cat lambda-cfg.json | jq '.FunctionArn' | tr -d \"
+    - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
 
     - name: Get Cloudfront distribution
       run: |
@@ -59,26 +65,34 @@ jobs:
     #     cloudfront_invalidation_required: false
 
     - name: Get etag
+      id: etag
       run: |
-        Etag=`cat $DIST_CONFIG_OLD_FILENAME | jq '.ETag' | tr -d \"` >> $GITHUB_ENV
+        cat dist-cfg.json | jq '.ETag' | tr -d \"
+    - run: echo "ETAG=${{steps.etag.outputs.prop}}" >> $GITHUB_ENV
+
 
     - name: Modify Config
       run: |
         cat dist-cfg.json | jq '.DistributionConfig' \
         > dist-cfg_updated.json
 
-
+    - name: manifest Version
+      uses: deef0000dragon1/json-edit-action/@v1
+      env:
+        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+        VALUE: ${{ env.LAMBDA_ARN }}
+        FILE: dist-cfg_updated.json
 
     - name: Debug
       run: |
         cat dist-cfg_updated.json
 
-    - name: Debug 2
-      run: |
-        echo ${{ env.Etag }}
+    # - name: Debug 2
+    #   run: |
+    #     echo ${{ env.ETAG }}
 
     # - run: |
-    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
+    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json --if-match ${{ env.ETAG }}
 
 
       # - name: Invalidate CDN
