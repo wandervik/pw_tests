@@ -17,6 +17,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
 
+
+    - name: TEST STEP
+      id: test-step
+      run: |
+        echo 'something'
+    - run: echo "TEST=${{steps.test-step.outputs.prop}}" >> $GITHUB_ENV
+
+    - run: echo "the value of test step is ${{ env.TEST }}"
+
+
     - name: Get latest lambda configuration
       run: |
         aws lambda list-versions-by-function --function-name version \
