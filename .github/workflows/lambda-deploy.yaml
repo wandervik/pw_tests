@@ -110,16 +110,16 @@ jobs:
       run: |
         cat dist-cfg.json
 
-    - name: Update distribution
-      uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
-      with:
-        distribution_id: 'E3MY6RLJJ44XBK'
-        path_pattern: 'Default'
-        lambda_association_event_type: 'origin-request'
-        lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-        cloudfront_invalidation_required: false
+    # - name: Update distribution   #not working action
+    #   uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
+    #   with:
+    #     distribution_id: 'E3MY6RLJJ44XBK'
+    #     path_pattern: 'Default'
+    #     lambda_association_event_type: 'origin-request'
+    #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+    #     cloudfront_invalidation_required: false
 
-      run: |
+    - run: |
         aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
 
 
