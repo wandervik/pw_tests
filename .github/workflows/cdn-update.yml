@@ -21,9 +21,7 @@ jobs:
     - name: TEST STEP
       id: test-step
       run: |
-        echo 'something'
-    - run: echo "TEST=${{steps.test-step.outputs.prop}}" >> $GITHUB_ENV
-
+        echo "TEST=something" >> $GITHUB_ENV
     - run: echo "the value of test step is ${{ env.TEST }}"
 
 
