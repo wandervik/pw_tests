@@ -1,0 +1,90 @@
+name: Update CDN
+
+on:
+  push
+
+jobs:
+  cdn-dev:
+    name: Deploy lambda to dev
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Get latest lambda version
+      run: |
+        aws lambda list-versions-by-function --function-name version \
+        --no-paginate \
+        --query "max_by(Versions, &to_number(to_number(Version) || '0'))" > lambda-cfg.json
+
+    - name: Get Cloudfront distribution
+      run: |
+        aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
+
+    # - name: Get new version
+    #   id: new_version
+    #   uses: notiz-dev/github-action-json-property@release
+    #   with:
+    #       path: 'dist-cfg.json'
+    #       prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+    # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+
+    # # Debug msg versions:
+    # - run: echo "new version is - ${{ env.new_version }}"
+
+    # - name: manifest Version
+    #   uses: deef0000dragon1/json-edit-action/@v1
+    #   env:
+    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+    #     VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+    #     FILE: dist-cfg.json
+
+    # - name: Debug
+    #   run: |
+    #     cat dist-cfg.json
+
+    # - name: Update distribution   #not working action
+    #   uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
+    #   with:
+    #     distribution_id: 'E3MY6RLJJ44XBK'
+    #     path_pattern: 'Default'
+    #     lambda_association_event_type: 'origin-request'
+    #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
+    #     cloudfront_invalidation_required: false
+
+    - name: Get etag
+      run: |
+        Etag=`cat $DIST_CONFIG_OLD_FILENAME | jq '.ETag' | tr -d \"` >> $GITHUB_ENV
+
+    - name: Modify Config
+      run: |
+        cat dist-cfg.json | jq \
+        '.Distribution.DistributionConfig | .Origins.Items = (.Origins.Items | map(if (.Id == $targetOriginId) then (.OriginPath = $newOriginPath) else . end))' \
+        > dist-cfg_updated.json
+
+
+
+    - name: Debug
+      run: |
+        cat dist-cfg_updated.json
+        echo ${{ env.Etag }}
+
+    # - run: |
+    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
+
+
+      # - name: Invalidate CDN
+      #   uses: chetan/invalidate-cloudfront-action@v2
+      #   env:
+      #     DISTRIBUTION: ${{ env.AWS_CDN_DISTRIBUTION }}
+      #     PATHS: "/*"
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
