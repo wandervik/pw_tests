@@ -73,6 +73,10 @@ jobs:
       run: |
         cat dist-cfg_updated.json
 
+    - name: Debug 2
+      run: |
+        echo ${{ env.Etag }}
+
     # - run: |
     #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
 
