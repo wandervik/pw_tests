@@ -64,8 +64,7 @@ jobs:
 
     - name: Modify Config
       run: |
-        cat dist-cfg.json | jq \
-        '.Distribution.DistributionConfig' \
+        cat dist-cfg.json | jq '.DistributionConfig' \
         > dist-cfg_updated.json
 
 
@@ -73,7 +72,6 @@ jobs:
     - name: Debug
       run: |
         cat dist-cfg_updated.json
-        echo ${{ env.Etag }}
 
     # - run: |
     #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
