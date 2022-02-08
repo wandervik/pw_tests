@@ -21,18 +21,6 @@ jobs:
         aws-region: us-east-1
 
 
-    # - name: TEST STEP
-    #   id: test-step
-    #   run: |
-    #     touch test.txt
-    #     echo something > test.txt
-    #     cat test.txt
-
-
-    #     echo "TEST=something" >> $GITHUB_ENV
-    # - run: echo "the value of test step is ${{ env.TEST }}"
-
-
     - name: Get latest lambda configuration
       run: |
         aws lambda list-versions-by-function --function-name version \
@@ -43,16 +31,17 @@ jobs:
       id: lambda
       run: |
         echo ::set-output name=lambda_arn::$(cat lambda-cfg.json | jq '.FunctionArn' | tr -d \")
-    - run: echo "LAMBDA_ARN=${{ steps.lambda.outputs.lambda_arn }}" >> $GITHUB_ENV
 
-    - run: "test value: ${{ env.LAMBDA_ARN }}"
+    # - run: echo "LAMBDA_ARN=${{ steps.lambda.outputs.lambda_arn }}" >> $GITHUB_ENV
+
+    # - run: "test value: ${{ env.LAMBDA_ARN }}"
 
 
     # - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
 
-    # - name: Get Cloudfront distribution
-    #   run: |
-    #     aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
+    - name: Get Cloudfront distribution
+      run: |
+        aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
 
     # - name: Get new version
     #   id: new_version
@@ -72,45 +61,33 @@ jobs:
     #     VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
     #     FILE: dist-cfg.json
 
-    # - name: Debug
-    #   run: |
-    #     cat dist-cfg.json
 
-    # - name: Update distribution   #not working action
-    #   uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
-    #   with:
-    #     distribution_id: 'E3MY6RLJJ44XBK'
-    #     path_pattern: 'Default'
-    #     lambda_association_event_type: 'origin-request'
-    #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-    #     cloudfront_invalidation_required: false
-
-    # - name: Get etag
-    #   id: etag
-    #   run: |
-    #     cat dist-cfg.json | jq '.ETag' | tr -d \"
-    # - run: echo "ETAG=${{steps.etag.outputs.prop}}" >> $GITHUB_ENV
+    - name: Get ETag
+      id: etag
+      run: |
+        echo ::set-output name=ETag::$(cat dist-cfg.json | jq '.ETag' | tr -d \")
+    - run: echo "ETAG=${{steps.etag.outputs.ETag}}" >> $GITHUB_ENV
 
 
-    # - name: Modify Config
-    #   run: |
-    #     cat dist-cfg.json | jq '.DistributionConfig' \
-    #     > dist-cfg_updated.json
+    - name: Modify distribution config file
+      run: |
+        cat dist-cfg.json | jq '.DistributionConfig' \
+        > dist-cfg_updated.json
 
-    # - name: manifest Version
-    #   uses: deef0000dragon1/json-edit-action/@v1
-    #   env:
-    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    #     VALUE: ${{ env.LAMBDA_ARN }}
-    #     FILE: dist-cfg_updated.json
+    - name: Edit Lambda arn in disrtibution config file
+      uses: deef0000dragon1/json-edit-action/@v1
+      env:
+        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
+        VALUE: ${{ steps.lambda.outputs.lambda_arn }}
+        FILE: dist-cfg_updated.json
 
-    # - name: Debug
-    #   run: |
-    #     cat dist-cfg_updated.json
+    - name: Debug
+      run: |
+        cat dist-cfg_updated.json
 
-    # - name: Debug 2
-    #   run: |
-    #     echo ${{ env.ETAG }}
+    - name: Debug 2
+      run: |
+        echo ${{ env.ETAG }}
 
     # - run: |
     #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json --if-match ${{ env.ETAG }}
