@@ -40,14 +40,12 @@ jobs:
         --query "max_by(Versions, &to_number(to_number(Version) || '0'))" > lambda-cfg.json
 
     - name: Get latest lambda arn
-      id: lambda_arn
+      id: lambda
       run: |
-        cat lambda-cfg.json | jq '.FunctionArn' | tr -d \"
+        echo ::set-output name=lambda_arn::$(cat lambda-cfg.json | jq '.FunctionArn' | tr -d \")
 
     - name: Test output
-      env:
-        SLACK_MESSAGE: ${{ steps.lambda_arn.outputs.stdout }}
-      run: echo ${{ env.SLACK_MESSAGE }}
+      run: echo ${{ steps.lambda.outputs.lambda_arn }}
 
     # - run: "test value: ${{ env.LAMBDA_ARN }}"
 
