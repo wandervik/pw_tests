@@ -43,11 +43,9 @@ jobs:
       id: lambda
       run: |
         echo ::set-output name=lambda_arn::$(cat lambda-cfg.json | jq '.FunctionArn' | tr -d \")
+    - run: echo "LAMBDA_ARN=${{ steps.lambda.outputs.lambda_arn }}" >> $GITHUB_ENV
 
-    - name: Test output
-      run: echo ${{ steps.lambda.outputs.lambda_arn }}
-
-    # - run: "test value: ${{ env.LAMBDA_ARN }}"
+    - run: "test value: ${{ env.LAMBDA_ARN }}"
 
 
     # - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
