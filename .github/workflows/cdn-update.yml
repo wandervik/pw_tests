@@ -43,25 +43,6 @@ jobs:
       run: |
         aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
 
-    # - name: Get new version
-    #   id: new_version
-    #   uses: notiz-dev/github-action-json-property@release
-    #   with:
-    #       path: 'dist-cfg.json'
-    #       prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
-
-    # # Debug msg versions:
-    # - run: echo "new version is - ${{ env.new_version }}"
-
-    # - name: manifest Version
-    #   uses: deef0000dragon1/json-edit-action/@v1
-    #   env:
-    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    #     VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-    #     FILE: dist-cfg.json
-
-
     - name: Get ETag
       id: etag
       run: |
@@ -71,15 +52,10 @@ jobs:
 
     - name: Modify distribution config file
       run: |
-        cat dist-cfg.json | jq '.DistributionConfig' \
+        cat dist-cfg.json | jq \
+        --arg newLambdaARN ${{ steps.lambda.outputs.lambda_arn }} \
+        '.DistributionConfig | .DefaultCacheBehavior = (.DefaultCacheBehavior | map(.LambdaFunctionAssociations.Items[0].LambdaFunctionARN = $newLambdaARN))' \
         > dist-cfg_updated.json
-
-    - name: Edit Lambda arn in disrtibution config file
-      uses: deef0000dragon1/json-edit-action/@v1
-      env:
-        KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-        VALUE: ${{ steps.lambda.outputs.lambda_arn }}
-        FILE: dist-cfg_updated.json
 
     - name: Debug
       run: |
@@ -101,4 +77,5 @@ jobs:
       #     AWS_REGION: ${{ env.AWS_REGION }}
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 
