@@ -45,6 +45,4 @@ jobs:
 
       - name: Push to bucket
         run: |
-          aws s3 cp prebid ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive --exclude "*.br" --exclude "*.gz"
-          aws s3 cp prebid/*.gz ${{ env.AWS_S3_PATH_DEV }} --acl public-read --metadata '{"Content-Encoding":"gzip"}'
-          aws s3 cp prebid/*.br ${{ env.AWS_S3_PATH_DEV }} --acl public-read --metadata '{"Content-Encoding":"br"}'
+          aws s3 cp prebid ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive
