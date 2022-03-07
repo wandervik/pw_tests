@@ -88,4 +88,4 @@ jobs:
       #   with:
       #    commit_message: Automated Change
       #    branch: changelog
-      #    file_pattern: CHANGELOG.md
+      #    file_pattern: CHANGELOG.md test
