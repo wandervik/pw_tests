@@ -34,7 +34,7 @@ jobs:
       #   with:
       #     node-version: 16.10.0
 
-      # - name: Install dependencies
+      # - name: Install dependencies nlalalala
       #   run: |
       #     touch ~/.netrc
       #     echo "machine github.com login ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" > ~/.netrc
