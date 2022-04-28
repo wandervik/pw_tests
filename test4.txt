@@ -1,6 +1,6 @@
 test file
 
 new info
-update
+update merge 
 
 update
