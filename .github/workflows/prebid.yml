@@ -1,0 +1,47 @@
+name: Deploy prebid
+
+on:
+  workflow_dispatch
+
+env:
+  AWS_REGION: "eu-central-1"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_PATH_DEV: s3://playwire-mobile-test/master
+
+
+jobs:
+  build-deploy-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+
+      # - name: Setup node
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 16.10.0
+
+      # - name: Install dependencies nlalalala
+      #   run: |
+      #     touch ~/.netrc
+      #     echo "machine github.com login ${{ secrets.REPOSITORY_ACCESS_TOKEN }}" > ~/.netrc
+      #     npm ci
+
+      # - run: npm run buildCDN:dev
+
+      - name: Push to bucket
+        run: |
+          aws s3 cp prebid ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive

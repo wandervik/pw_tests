@@ -1,0 +1,79 @@
+name: Update CDN
+
+on:
+  workflow_dispatch
+
+jobs:
+  cdn-dev:
+    name: Deploy lambda to dev
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+
+    - name: Get latest lambda configuration
+      run: |
+        aws lambda list-versions-by-function --function-name version \
+        --no-paginate \
+        --query "max_by(Versions, &to_number(to_number(Version) || '0'))" > lambda-cfg.json
+
+    - name: Get latest lambda arn
+      id: lambda
+      run: |
+        echo ::set-output name=lambda_arn::$(cat lambda-cfg.json | jq '.FunctionArn' | tr -d \")
+
+    # - run: echo "LAMBDA_ARN=${{ steps.lambda.outputs.lambda_arn }}" >> $GITHUB_ENV
+
+    # - run: "test value: ${{ env.LAMBDA_ARN }}"
+
+
+    # - run: echo "LAMBDA_ARN=${{steps.lambda_arn.outputs.prop}}" >> $GITHUB_ENV
+
+    - name: Get Cloudfront distribution
+      run: |
+        aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
+
+    - name: Get ETag
+      id: etag
+      run: |
+        echo ::set-output name=ETag::$(cat dist-cfg.json | jq '.ETag' | tr -d \")
+    - run: echo "ETAG=${{steps.etag.outputs.ETag}}" >> $GITHUB_ENV
+
+
+    - name: Modify distribution config file
+      run: |
+        cat dist-cfg.json | jq \
+        --arg newLambdaARN ${{ steps.lambda.outputs.lambda_arn }} \
+        '.DistributionConfig | .DefaultCacheBehavior = (.DefaultCacheBehavior | map(.LambdaFunctionAssociations.Items[0].LambdaFunctionARN = $newLambdaARN))' \
+        > dist-cfg_updated.json
+
+    - name: Debug
+      run: |
+        cat dist-cfg_updated.json
+
+    - name: Debug 2
+      run: |
+        echo ${{ env.ETAG }}
+
+    # - run: |
+    #     aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json --if-match ${{ env.ETAG }}
+
+
+      # - name: Invalidate CDN
+      #   uses: chetan/invalidate-cloudfront-action@v2
+      #   env:
+      #     DISTRIBUTION: ${{ env.AWS_CDN_DISTRIBUTION }}
+      #     PATHS: "/*"
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
