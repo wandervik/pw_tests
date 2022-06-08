@@ -54,7 +54,7 @@ jobs:
         run: |
           if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi
 
-      - run: echo "RESULT=${{steps.folder-check.outputs.check}}" >> $GITHUB_ENV
+      # - run: echo "RESULT=${{steps.folder-check.outputs.check}}" >> $GITHUB_ENV
 
       - name: Push to bucket
         run: |
@@ -64,7 +64,7 @@ jobs:
   invalidation:
     runs-on: ubuntu-latest
     needs: deploy
-    # if: ${{ env.RESULT }} == 'overriding'
+    if: ${{needs.deploy.outputs.output2}} == 'overriding'
 
     environment: dev
 
