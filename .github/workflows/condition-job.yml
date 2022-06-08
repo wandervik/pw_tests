@@ -48,13 +48,13 @@ jobs:
       - name: Check old version repositiry
         id: folder-check
         run: |
-          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi
+          if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi
 
       - run: echo "RESULT=${{steps.folder-check.outputs.prop}}" >> $GITHUB_ENV
 
       - name: Push to bucket
         run: |
-          aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }} --acl public-read --delete
+          aws s3 sync dist ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }} --acl public-read --delete
 
 
   invalidation:
