@@ -63,7 +63,7 @@ jobs:
   invalidation:
     runs-on: ubuntu-latest
     needs: deploy
-    if: ${{needs.deploy.outputs.output2}} == 'overriding'
+    if: needs.deploy.outputs.output2 == 'overriding'
 
     environment: dev
 
