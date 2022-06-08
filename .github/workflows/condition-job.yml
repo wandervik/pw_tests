@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.new_version.outputs.prop }}
-      output2: ${{ steps.folder-check.outputs.check }}
+      output2: ${{ steps.folder-check.outputs.prop }}
 
     environment: dev
 
@@ -53,8 +53,7 @@ jobs:
         id: folder-check
         run: |
           if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi
-
-      # - run: echo "RESULT=${{steps.folder-check.outputs.check}}" >> $GITHUB_ENV
+      - run: echo "result=${{steps.folder-check.outputs.prop}}" >> $GITHUB_ENV
 
       - name: Push to bucket
         run: |
