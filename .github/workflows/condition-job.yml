@@ -11,8 +11,12 @@ env:
   AWS_S3_PATH_PROD: s3://tarabarova-prod
 
 jobs:
-  build-deploy-dev:
+  deploy:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.new_version.outputs.prop }}
+      output2: ${{ steps.folder-check.outputs.check }}
+
     environment: dev
 
     steps:
@@ -50,7 +54,7 @@ jobs:
         run: |
           if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi
 
-      - run: echo "RESULT=${{steps.folder-check.outputs.prop}}" >> $GITHUB_ENV
+      - run: echo "RESULT=${{steps.folder-check.outputs.check}}" >> $GITHUB_ENV
 
       - name: Push to bucket
         run: |
@@ -66,7 +70,7 @@ jobs:
 
     steps:
       - name: Invalidate CloudFront
-        run: echo 'invalidation for version ${{ env.new_version }} is successfull'
+        run: echo 'invalidation for version ${{needs.deploy.outputs.output1}} is successfull'
 
 # jobs:
 #   job1:
