@@ -71,8 +71,6 @@ jobs:
       - name: Invalidate CloudFront
         run: echo 'invalidation for version ${{needs.deploy.outputs.output1}} is successfull'
 
-      - run: echo ${{needs.deploy.outputs.output2}}
-
 # jobs:
 #   job1:
 #     runs-on: ubuntu-latest
