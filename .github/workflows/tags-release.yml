@@ -16,7 +16,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - run: echo "VERSION = ${{ github.ref_name/v/ }}" >> $GITHUB_ENV
+      # - name: Version
+      #   run: |
+      #     tag_name = ${{ github.ref_name }}
+      #     echo VERSION = ${tag_name/v/}
 
-      - name: Deploy
-        run: echo "deployin to path s3://test-path/${{ env.VERSION }}"
+      # - run: echo "VERSION = ${{ github.ref_name/v/ }}" >> $GITHUB_ENV
+
+      - name: version
+        id: version
+        run: |
+          tag_name = ${{ github.ref_name }}
+          echo "::set-output name=VERSION::$(echo ${tag_name/v/})"
+
+      - name: test
+        run: echo ${{ steps.version.outputs.VERSION }} is a current version
+
+      # - name: Deploy
+      #   run: echo "deployin to path s3://test-path/${{ env.VERSION }}"
+
+
+
+      # - name: Write changelog
+      #   env:
+      #     TIME: "${{ steps.time.outputs.time }}"
+      #   run: |
+      #     echo "## Feature ${{ env.FEATURE_NAME }}" >> CHANGELOG.md
+      #     echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
+      #     echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
+
+      # - name: Check old version repositiry
+      #   id: folder-check
+      #   run: |
+      #     echo "::set-output name=result::$(if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi)"
