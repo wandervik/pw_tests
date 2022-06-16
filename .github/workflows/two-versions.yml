@@ -32,4 +32,4 @@ jobs:
       # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
 
       - name: Deploy
-        run: echo "deployin to path ${{ AWS_S3_PATH_PROD}}/${{ github.ref_name }}"
+        run: echo "deployin to path ${{ env.AWS_S3_PATH_PROD }}/${{ github.ref_name }}"
