@@ -26,7 +26,8 @@ jobs:
       - name: version
         id: version
         run: |
-          echo "::set-output name=VERSION::$(echo ${${{ github.ref_name }}/v/})"
+          export tag_name='${{ github.ref_name }}'
+          echo "::set-output name=VERSION::$(echo ${tag_name/v/})"
 
       - name: test
         run: echo ${{ steps.version.outputs.VERSION }} is a current version
