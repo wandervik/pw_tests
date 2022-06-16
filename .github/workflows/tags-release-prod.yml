@@ -1,9 +1,9 @@
-name: Release on tag push
+name: PROD Release on release push
 
 on:
-  push:
-    tags:
-    - 'ver/*'
+  release:
+    types:
+      - "released"
 
 jobs:
   deploy:
