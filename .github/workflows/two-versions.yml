@@ -1,0 +1,35 @@
+name: Two versions
+
+on:
+  create
+
+env:
+  AWS_REGION: "eu-central-1"
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_S3_PATH_PROD: s3://tarabarova-prod
+
+jobs:
+  deploy:
+    if: ${{ github.ref == 'refs/heads/release/*' }}
+    runs-on: ubuntu-latest
+    # outputs:
+    #   output1: ${{ steps.new_version.outputs.prop }}
+    #   output2: ${{ steps.folder-check.outputs.result }}
+
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # - name: Get new version
+      #   id: new_version
+      #   uses: notiz-dev/github-action-json-property@release
+      #   with:
+      #       path: 'package.json'
+      #       prop_path: 'version'
+      # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+
+      - name: Deploy
+        run: echo "deployin to path ${{ AWS_S3_PATH_PROD}}/${{ github.ref_name }}"
