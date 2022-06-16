@@ -3,7 +3,7 @@ name: Release on tag push
 on:
   push:
     tags:
-    - 'ver/*'
+    - 'v*'
 
 jobs:
   deploy:
@@ -12,8 +12,11 @@ jobs:
     environment: dev
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v2
 
+      - run: echo "VERSION = ${{ github.ref_name/v/ }}" >> $GITHUB_ENV
+
       - name: Deploy
-        run: echo "deployin to path s3://test-path/${{ github.ref_name }}"
+        run: echo "deployin to path s3://test-path/${{ env.VERSION }}"
