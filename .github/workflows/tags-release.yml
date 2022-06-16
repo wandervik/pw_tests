@@ -4,6 +4,9 @@ on:
   push:
     tags:
     - 'ver/*'
+  release:
+    types:
+      - "published"
 
 jobs:
   deploy:
