@@ -1,7 +1,8 @@
 name: Test conditional jobs
 
 on:
-  push
+  push:
+
 
 env:
   AWS_REGION: "eu-central-1"
@@ -88,10 +89,12 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{needs.deploy.outputs.output1}}
-        release_name: ${{needs.deploy.outputs.output1}}
+        tag_name: rc-v${{needs.deploy.outputs.output1}}
+        release_name: RC ${{needs.deploy.outputs.output1}}
         draft: true
         prerelease: false
+
+    - run: echo 'DEBUG VALUE is ${{ steps.create_release.outputs.upload_url }}'
 
     - uses: actions/upload-release-asset@v1.0.1
       env:
