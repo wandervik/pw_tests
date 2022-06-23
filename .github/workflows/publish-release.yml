@@ -1,10 +1,7 @@
 name: Test conditional jobs
 
 on:
-  push:
-
-
-
+  workflow_dispatch
 
 env:
   AWS_REGION: "eu-central-1"
