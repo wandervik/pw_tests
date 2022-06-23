@@ -64,34 +64,39 @@ jobs:
           name: build
           path: dist/
 
-  # release:
-  #   runs-on: ubuntu-latest
-  #   needs: deploy
-  #   environment: dev
+  release:
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment: dev
 
-  #   steps:
-  #   - name: Create Draft Release
-  #     id: create_release
-  #     uses: actions/create-release@v1
-  #     env:
-  #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     with:
-  #       tag_name: rc-v${{needs.deploy.outputs.output1}}
-  #       release_name: RC ${{needs.deploy.outputs.output1}}
-  #       draft: false
-  #       prerelease: false
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        name: build
+    
+    - name: Create Draft Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{needs.deploy.outputs.output1}}
+        release_name: ${{needs.deploy.outputs.output1}}
+        draft: true
+        prerelease: false
 
-    # - uses: actions/upload-release-asset@v1.0.1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./my-artifact.zip
-    #     asset_name: my-artifact.zip
-    #     asset_content_type: application/zip
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build.zip
+        asset_name: build.zip
+        asset_content_type: application/zip
 
-    # - uses: eregon/publish-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     release_id: ${{ steps.create_release.outputs.id }}
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
