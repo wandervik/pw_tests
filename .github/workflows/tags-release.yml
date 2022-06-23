@@ -3,7 +3,7 @@ name: Release on tag push
 on:
   push:
     tags:
-    - 'v*'
+    - 'rc-v*'
 
 jobs:
   deploy:
@@ -32,9 +32,61 @@ jobs:
       - name: test
         run: echo ${{ steps.version.outputs.VERSION }} is a current version
 
-      # - name: Deploy
-      #   run: echo "deployin to path s3://test-path/${{ env.VERSION }}"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
 
+  release:
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment: dev
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        name: build
+        path: build
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Archive artifacts
+      run: zip -r build.zip build
+
+    # - name: Create Draft Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: v${{needs.deploy.outputs.output1}}
+    #     release_name: ${{needs.deploy.outputs.output1}}
+    #     draft: true
+    #     prerelease: false
+
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.3
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: build.zip
+        asset_name: build.zip
+        asset_content_type: application/zip
+
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
 
 
       # - name: Write changelog
@@ -49,3 +101,4 @@ jobs:
       #   id: folder-check
       #   run: |
       #     echo "::set-output name=result::$(if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi)"
+

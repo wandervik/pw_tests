@@ -1,7 +1,8 @@
 name: Test conditional jobs
 
 on:
-  push:
+  workflow_dispatch:
+
 
 
 env:
@@ -75,13 +76,13 @@ jobs:
       uses: actions/download-artifact@v3.0.0
       with:
         name: build
-        path: build
+        path: dist
 
     - name: Display structure of downloaded files
       run: ls -R
 
     - name: Archive artifacts
-      run: zip -r build.zip build
+      run: zip -r build.zip dist
 
     - name: Create Draft Release
       id: create_release
