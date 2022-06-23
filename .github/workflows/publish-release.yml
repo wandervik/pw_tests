@@ -74,7 +74,13 @@ jobs:
       uses: actions/download-artifact@v3.0.0
       with:
         name: build
-    
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Archive artifacts
+      run: zip -r build.zip build
+
     - name: Create Draft Release
       id: create_release
       uses: actions/create-release@v1
@@ -91,7 +97,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./build.zip
+        asset_path: build.zip
         asset_name: build.zip
         asset_content_type: application/zip
 
