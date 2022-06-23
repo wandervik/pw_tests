@@ -1,7 +1,9 @@
 name: Two versions
 
+# on:
+#   create
 on:
-  create
+  workflow_dispatch
 
 env:
   AWS_REGION: "eu-central-1"
