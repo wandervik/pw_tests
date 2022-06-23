@@ -1,7 +1,8 @@
 name: Test conditional jobs
 
 on:
-  workflow_dispatch:
+  push:
+
 
 
 
