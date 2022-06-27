@@ -1,9 +1,14 @@
 name: PROD Release on release push
 
+# on:
+#   release:
+#     types:
+#       - "released"
+
 on:
-  release:
-    types:
-      - "released"
+  push:
+    branches:
+      - "master"
 
 jobs:
   deploy:
