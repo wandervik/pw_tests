@@ -1,7 +1,7 @@
 name: Test conditional jobs
 
 on:
-  workflow_dispatch
+  push
 
 env:
   AWS_REGION: "eu-central-1"
@@ -40,6 +40,9 @@ jobs:
             path: 'package.json'
             prop_path: 'version'
       - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
+
+      - name: Check if version isn't empty
+        run: if [[ -z ${{ env.new_version }} ]]; then exit 1; else echo "Version isn't empty"; fi
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

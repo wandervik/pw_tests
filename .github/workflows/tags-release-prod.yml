@@ -1,14 +1,11 @@
 name: PROD Release on release push
 
-# on:
-#   release:
-#     types:
-#       - "released"
-
 on:
-  push:
-    branches:
-      - "master"
+  release:
+    types:
+      - "released"
+
+
 
 jobs:
   deploy:
@@ -22,3 +19,4 @@ jobs:
 
       - name: Deploy
         run: echo "deployin to path s3://test-path/${{ github.ref_name }}"
+
