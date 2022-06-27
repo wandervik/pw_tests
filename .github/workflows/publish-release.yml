@@ -1,7 +1,9 @@
 name: Test conditional jobs
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - "test-pr-merge"
 
 env:
   AWS_REGION: "eu-central-1"
@@ -30,8 +32,7 @@ jobs:
           minor-wording:  'MINOR_UPDATE'
           major-wording:  'MAJOR_UPDATE'
           patch-wording:  'PATCH_UPDATE'
-          skip-commit:  'true'
-          skip-tag: 'true'
+          tag-prefix:     'v'
 
       - name: Get new version
         id: new_version
@@ -88,8 +89,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: rc-v${{needs.deploy.outputs.output1}}
-        release_name: RC ${{needs.deploy.outputs.output1}}
+        tag_name: v${{needs.deploy.outputs.output1}}
+        release_name: Release ${{needs.deploy.outputs.output1}}
         draft: true
         prerelease: false
 
