@@ -255,7 +255,8 @@ jobs:
 
       - name: Add tags to pushed files
         run: |
-          for f in dist/*; do aws s3api put-object-tagging --bucket tarabarova-prod --key '${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}/$f' --tagging "TagSet=[{Key=Test, Value=test}]"; done
+          cd dist
+          for f in *; do aws s3api put-object-tagging --bucket tarabarova-prod --key '${{ env.new_version }}/'$f --tagging "TagSet=[{Key=Test, Value=test}]"; done
 
 
       # - uses: actions/checkout@v2
