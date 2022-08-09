@@ -1,0 +1,63 @@
+name: PROD Continuous Deployment
+
+on:
+  push:
+    branches: [ 'master' ]
+
+env:
+  AWS_REGION: "us-east-1"
+  AWS_ROLE: test
+  # AWS_S3_PATH_DEV: s3://cdn.playwire.io
+  # DISTRIBUTION_ID: E297D7JLOAU24P
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # - name: Configure AWS credentials
+    #   uses: aws-actions/configure-aws-credentials@v1
+    #   with:
+    #     role-to-assume: arn
+    #     aws-region: ${{ env.AWS_REGION }}
+
+    # - name: Copy files to S3 bucket
+    #   run: |
+    #     aws s3 cp wrapper.js ${{ env.AWS_S3_PATH_DEV }}/wrapper.js
+
+    # - name: Invalidate CloudFront
+    #   uses: chetan/invalidate-cloudfront-action@v2
+    #   env:
+    #     DISTRIBUTION: ${{ secrets.DISTRIBUTION_ID }}
+    #     PATHS: "/wrapper.js"
+    #     AWS_REGION: "us-east-1"
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Create Draft Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1
+        release_name: v1
+        draft: true
+        prerelease: false
+
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: .
+        asset_name: wrapper.js
+        asset_content_type: text/javascript
+
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
