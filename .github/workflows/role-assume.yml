@@ -38,7 +38,9 @@ jobs:
 
     - name: Get current date
       id: date
-      run: echo "::set-output name=DATE::$(date +'%m-%d-%Y')"
+      run: |
+        echo "::set-output name=DATE::$(date +'%m-%d-%Y')"
+        echo "::set-output name=TIME::$(date +'%H-%M-%S')"
 
     - name: Create Draft Release
       id: create_release
@@ -46,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.date.outputs.DATE }}
+        tag_name: ${{ steps.date.outputs.DATE }}-${{ steps.date.outputs.TIME }}-
         release_name: Updated on ${{ steps.date.outputs.DATE }}
         draft: true
         prerelease: false
