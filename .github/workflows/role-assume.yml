@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.date.outputs.DATE }}-${{ steps.date.outputs.TIME }}-
+        tag_name: ${{ steps.date.outputs.DATE }}-${{ steps.date.outputs.TIME }}
         release_name: Updated on ${{ steps.date.outputs.DATE }}
         draft: true
         prerelease: false
