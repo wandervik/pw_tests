@@ -27,47 +27,44 @@ jobs:
         role-to-assume: ${{ env.AWS_ROLE }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Copy files to S3 bucket
-      run: |
-        aws s3 cp wrapper.js ${{ env.AWS_S3_PATH_DEV }}/wrapper.js
-
-    - name: Invalidate CloudFront
-      uses: chetan/invalidate-cloudfront-action@v2
-      env:
-        DISTRIBUTION: ${{ secrets.DISTRIBUTION_ID }}
-        PATHS: "/wrapper.js"
-        # AWS_REGION: "us-east-1"
-        # # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        # # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-    # - name: Get current date
-    #   id: date
+    # - name: Copy files to S3 bucket
     #   run: |
-    #     echo "::set-output name=DATE::$(date +'%m-%d-%Y')"
-    #     echo "::set-output name=TIME::$(date +'%H-%M-%S')"
+    #     aws s3 cp wrapper.js ${{ env.AWS_S3_PATH_DEV }}/wrapper.js
 
-    # - name: Create Draft Release
-    #   id: create_release
-    #   uses: actions/create-release@v1
+    # - name: Invalidate CloudFront
+    #   uses: chetan/invalidate-cloudfront-action@v2
     #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     tag_name: ${{ steps.date.outputs.DATE }}-${{ steps.date.outputs.TIME }}
-    #     release_name: Updated on ${{ steps.date.outputs.DATE }}
-    #     draft: true
-    #     prerelease: false
+    #     DISTRIBUTION: ${{ env.DISTRIBUTION_ID }}
+    #     PATHS: "/wrapper.js"
 
-    # - uses: actions/upload-release-asset@v1.0.1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: ./wrapper.js
-    #     asset_name: wrapper.js
-    #     asset_content_type: text/javascript
+    - name: Get current date
+      id: date
+      run: |
+        echo "::set-output name=DATE::$(date +'%m-%d-%Y')"
+        echo "::set-output name=TIME::$(date +'%H-%M-%S')"
 
-    # - uses: eregon/publish-release@v1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     release_id: ${{ steps.create_release.outputs.id }}
+    - name: Create Draft Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.date.outputs.DATE }}-${{ steps.date.outputs.TIME }}
+        release_name: Updated on ${{ steps.date.outputs.DATE }}
+        draft: true
+        prerelease: false
+
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./wrapper.js
+        asset_name: wrapper.js
+        asset_content_type: text/javascript
+
+    - uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
