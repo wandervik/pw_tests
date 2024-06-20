@@ -117,7 +117,7 @@ jobs:
           VALUE: ${{ env.new_version }}
           FILE: workflow-vars.json
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -151,7 +151,7 @@ jobs:
           echo "[ ${{ env.TIME }} ] : deployed on prod <br />" >> CHANGELOG.md
           echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
          commit_message: Automated Change
          branch: changelog
@@ -285,7 +285,7 @@ jobs:
       #     VALUE: ${{ env.new_version }}
       #     FILE: package-lock.json
 
-      # - uses: stefanzweifel/git-auto-commit-action@v4
+      # - uses: stefanzweifel/git-auto-commit-action@v5
       #   with:
       #    commit_message: Bump version
       #    branch: master
@@ -317,7 +317,7 @@ jobs:
       #     echo "[ ${{ env.TIME }} ] : deployed on prod <br />" >> CHANGELOG.md
       #     echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
 
-      # - uses: stefanzweifel/git-auto-commit-action@v4
+      # - uses: stefanzweifel/git-auto-commit-action@v5
       #   with:
       #    commit_message: Automated Change
       #    branch: changelog
