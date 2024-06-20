@@ -16,7 +16,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -53,7 +53,7 @@ jobs:
 
 
       - name: Checkout changelog branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: changelog
 
