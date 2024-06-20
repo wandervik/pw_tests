@@ -64,7 +64,7 @@ jobs:
 
       - name: Get current timestamp
         id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: nanzm/get-time-action@v2.0
         with:
           timeZone: 2
           format: 'YYYY-MM-DD-HH-mm-ss'
