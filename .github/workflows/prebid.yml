@@ -1,13 +1,16 @@
 name: Deploy prebid
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - "test-pr"
 
 env:
   AWS_REGION: "eu-central-1"
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_S3_PATH_DEV: s3://playwire-mobile-test/master
+  DISTRIBUTION_ID: E3MY6RLJJ44XBK
 
 
 jobs:
@@ -42,6 +45,17 @@ jobs:
 
       # - run: npm run buildCDN:dev
 
-      - name: Push to bucket
-        run: |
-          aws s3 cp prebid ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive
+      # - name: Push to bucket
+      #   run: |
+      #     aws s3 cp prebid ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive
+
+
+
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{ env.DISTRIBUTION_ID }}
+          PATHS: "/master-test.txt /master-test-2.txt"
+          AWS_REGION: "us-east-1"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
