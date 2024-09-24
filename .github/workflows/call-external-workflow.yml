@@ -18,4 +18,4 @@ jobs:
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: Bearer ${{ secrets.PAT }}" \
            https://api.github.com/repos/wandervik/github-actions-tut/actions/workflows/tests-ext.yml/dispatches \
-            -d '{"ref":"main","inputs":{"pageos":"v1.0.0"}}'
+            -d '{"ref":"master","inputs":{"pageos":"v1.0.0"}}'
