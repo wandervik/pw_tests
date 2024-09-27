@@ -13,8 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Test 
-        run: git tag --points-at HEAD
+      - name: Print event
+        run: echo "${{ toJSON(github.event) }}"
       # - name: Trigger Workflow in Another Repository
       #   run: |
       #     # Set the required variables
