@@ -1,7 +1,10 @@
 name: Trigger Target Workflow
 
 on:
-  push:
+  workflow_run:
+    workflows: ["PROD Release on release push"]
+    types:
+      - completed  
 
 jobs:
   trigger:
@@ -12,14 +15,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Test 
         run: git tag --points-at HEAD
-      - name: Trigger Workflow in Another Repository
-        run: |
-          # Set the required variables
-          repo_owner="wandervik" 
-          repo_name="github-actions-tut"  
-          event_type="trigger-workflow" 
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: Bearer ${{ secrets.PAT }}" \
-           https://api.github.com/repos/wandervik/github-actions-tut/actions/workflows/tests-ext.yml/dispatches \
-            -d '{"ref":"master","inputs":{"pageos":"v1.0.0"}}'
+      # - name: Trigger Workflow in Another Repository
+      #   run: |
+      #     # Set the required variables
+      #     repo_owner="wandervik" 
+      #     repo_name="github-actions-tut"  
+      #     event_type="trigger-workflow" 
+      #     curl -X POST \
+      #       -H "Accept: application/vnd.github.v3+json" \
+      #       -H "Authorization: Bearer ${{ secrets.PAT }}" \
+      #      https://api.github.com/repos/wandervik/github-actions-tut/actions/workflows/tests-ext.yml/dispatches \
+      #       -d '{"ref":"master","inputs":{"pageos":"v1.0.0"}}'
