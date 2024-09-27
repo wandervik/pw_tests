@@ -1,13 +1,17 @@
 name: Trigger Target Workflow
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   trigger:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test 
+        run: git tag --points-at HEAD
       - name: Trigger Workflow in Another Repository
         run: |
           # Set the required variables
