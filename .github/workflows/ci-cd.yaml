@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -108,7 +108,7 @@ jobs:
           aws s3 sync dist ${{ env.AWS_S3_PATH_DEV }}/${{ env.new_version }} --acl public-read --delete
 
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Update version in env file
         uses: deef0000dragon1/json-edit-action/@v1
@@ -126,7 +126,7 @@ jobs:
          file_pattern: workflow-vars.json
 
       - name: Checkout changelog branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: changelog
 
@@ -171,7 +171,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -259,7 +259,7 @@ jobs:
           for f in *; do aws s3api put-object-tagging --bucket tarabarova-prod --key '${{ env.new_version }}/'$f --tagging "TagSet=[{Key=Test, Value=test}]"; done
 
 
-      # - uses: actions/checkout@v2
+      # - uses: actions/checkout@v4
 
       # - name: Commit bumped version
       #   uses:  'phips28/gh-action-bump-version@master'
@@ -292,7 +292,7 @@ jobs:
       #    file_pattern: package-lock.json
 
       # - name: Checkout changelog branch
-      #   uses: actions/checkout@v2
+      #   uses: actions/checkout@v4
       #   with:
       #     ref: changelog
 
