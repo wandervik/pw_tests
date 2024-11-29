@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -60,7 +60,7 @@ jobs:
           aws s3 cp br ${{ env.AWS_S3_PATH_DEV }} --acl public-read --recursive --content-encoding br --content-type "text/javascript"
 
       # - name: Checkout changelog branch
-      #   uses: actions/checkout@v2
+      #   uses: actions/checkout@v4
       #   with:
       #     ref: changelog
 
