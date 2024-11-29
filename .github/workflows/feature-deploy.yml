@@ -77,7 +77,7 @@ jobs:
           echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
           echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
          commit_message: Automated Change
          branch: changelog
