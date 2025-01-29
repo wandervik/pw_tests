@@ -1,0 +1,22 @@
+name: PROD Release on release push
+
+on:
+  release:
+    types:
+      - "released"
+
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment: dev
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        run: echo "deployin to path s3://test-path/${{ github.ref_name }}"
+

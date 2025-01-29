@@ -1,0 +1,97 @@
+name: Release on tag push
+
+on:
+  push:
+    tags:
+    - 'rc-v*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment: dev
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      # - name: Version
+      #   run: |
+      #     tag_name = ${{ github.ref_name }}
+      #     echo VERSION = ${tag_name/v/}
+
+      # - run: echo "VERSION = ${{ github.ref_name/v/ }}" >> $GITHUB_ENV
+
+      - name: version
+        id: version
+        run: |
+          export tag_name='${{ github.ref_name }}'
+          echo "::set-output name=VERSION::$(echo ${tag_name/v/})"
+
+      - name: test
+        run: echo ${{ steps.version.outputs.VERSION }} is a current version
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: dist/
+
+  release:
+    runs-on: ubuntu-latest
+    needs: deploy
+    environment: dev
+
+    steps:
+    - name: Download a Build Artifact
+      uses: actions/download-artifact@v3.0.0
+      with:
+        name: build
+        path: build
+
+    - name: Display structure of downloaded files
+      run: ls -R
+
+    - name: Archive artifacts
+      run: zip -r build.zip build
+
+    # - name: Create Draft Release
+    #   id: create_release
+    #   uses: actions/create-release@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: v${{needs.deploy.outputs.output1}}
+    #     release_name: ${{needs.deploy.outputs.output1}}
+    #     draft: true
+    #     prerelease: false
+
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.3
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: build.zip
+        asset_name: build.zip
+        asset_content_type: application/zip
+
+      # - name: Write changelog
+      #   env:
+      #     TIME: "${{ steps.time.outputs.time }}"
+      #   run: |
+      #     echo "## Feature ${{ env.FEATURE_NAME }}" >> CHANGELOG.md
+      #     echo "[ ${{ env.TIME }} ] : deployed on dev <br />" >> CHANGELOG.md
+      #     echo "Last commit message: ${{ github.event.head_commit.message }}" >> CHANGELOG.md
+
+      # - name: Check old version repositiry
+      #   id: folder-check
+      #   run: |
+      #     echo "::set-output name=result::$(if [[ $(aws s3 ls ${{ env.AWS_S3_PATH_PROD }}/${{ env.new_version }}| head) ]]; then echo "overriding"; else echo "new-folder"; fi)"
+

@@ -33,7 +33,6 @@ jobs:
       run: |
         python3 insert-version.py new_version ${{ env.VERSION }}
 
-
     - name: Deploy lambda
       uses: appleboy/lambda-action@master
       with:
@@ -76,60 +75,4 @@ jobs:
         aws_region: us-east-1
         function_name: version
         source: lambda-var.js
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: eu-central-1
-
-
-    # - name: Update Cloudfront
-    #   run: |
-    #     aws cloudfront get-distribution-config --id E3MY6RLJJ44XBK --output json > dist-cfg.json
-
-    # - name: Get new version
-    #   id: new_version
-    #   uses: notiz-dev/github-action-json-property@release
-    #   with:
-    #       path: 'dist-cfg.json'
-    #       prop_path: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    # - run: echo "new_version=${{steps.new_version.outputs.prop}}" >> $GITHUB_ENV
-
-    # # Debug msg versions:
-    # - run: echo "new version is - ${{ env.new_version }}"
-
-    # - name: manifest Version
-    #   uses: deef0000dragon1/json-edit-action/@v1
-    #   env:
-    #     KEY: 'DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations.Items.0.LambdaFunctionARN'
-    #     VALUE: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-    #     FILE: dist-cfg.json
-
-    # - name: Debug
-    #   run: |
-    #     cat dist-cfg.json
-
-    # - name: Update distribution
-    #   uses: elseu/elsb-dbit-cloudfront-lambda-edge-update-action@master
-    #   with:
-    #     distribution_id: 'E3MY6RLJJ44XBK'
-    #     path_pattern: 'Default'
-    #     lambda_association_event_type: 'origin-request'
-    #     lambda_association_version_arn: 'arn:aws:lambda:us-east-1:519140963702:function:version:8'
-    #     cloudfront_invalidation_required: false
-
-      # run: |
-      #   aws cloudfront update-distribution --id E3MY6RLJJ44XBK --distribution-config file://dist-cfg.json
-
-
-      # - name: Invalidate CDN
-      #   uses: chetan/invalidate-cloudfront-action@v2
-      #   env:
-      #     DISTRIBUTION: ${{ env.AWS_CDN_DISTRIBUTION }}
-      #     PATHS: "/*"
-      #     AWS_REGION: ${{ env.AWS_REGION }}
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
