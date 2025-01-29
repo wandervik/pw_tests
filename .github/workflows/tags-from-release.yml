@@ -2,8 +2,6 @@ name: Get Latest Tag from Release Branch
 
 on:
   push:
-    branches:
-      - master
 
 jobs:
   get-latest-tag:
@@ -18,4 +16,4 @@ jobs:
         run: echo "LATEST_TAG=$(git tag --sort=-creatordate --merged origin/release | head -n 1)" >> $GITHUB_ENV
 
       - name: Print latest tag
-        run: echo "Latest tag on release branch: $LATEST_TAG"
+        run: echo "Latest tag on release branch: ${{ env.LATEST_TAG }}"
